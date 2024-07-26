@@ -1,7 +1,6 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const nodemailer = require('nodemailer');
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -11,6 +10,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
 const db = require('./config/db');
+const sendEmail = require('./config/email'); // Importar la función de envío de correo
 
 // Register user
 app.post('/register', (req, res) => {
@@ -41,29 +41,6 @@ app.post('/login', (req, res) => {
   });
 });
 
-// Email sending function
-const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST,
-  port: process.env.EMAIL_PORT,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  }
-});
-
-function sendEmail(subject, text, to) {
-  const mailOptions = {
-    from: process.env.EMAIL_USER,
-    to,
-    subject,
-    text
-  };
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) throw error;
-    console.log('Email sent: ' + info.response);
-  });
-}
-
 // Proposal endpoint
 app.post('/submit-proposal', (req, res) => {
   const { answer } = req.body;
@@ -86,7 +63,18 @@ app.post('/rejection', (req, res) => {
 
 app.post('/success', (req, res) => {
   sendEmail('Thank You!', 'Thanks for giving me a chance.', 'user@example.com');
-  res.redirect('https://www.youtube.com/watch?v=dQw4w9WgXcQ');
+  res.redirect(process.env.YOUTUBE_VIDEO_URL);
+});
+
+// Endpoint to get video URL
+app.get('/get-video-url', (req, res) => {
+  res.json({ videoUrl: process.env.YOUTUBE_VIDEO_URL });
+});
+
+// Endpoint to send email
+app.post('/send-email', (req, res) => {
+  sendEmail('Thank You!', 'Thanks for giving me a chance.', 'user@example.com');
+  res.sendStatus(200);
 });
 
 const PORT = process.env.PORT || 3000;

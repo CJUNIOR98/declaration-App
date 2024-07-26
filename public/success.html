@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,9 +11,24 @@
         <img src="your-gif-url.gif" alt="Éxito">
         <h1>Muchas gracias</h1>
         <p>Por darme la oportunidad. Me haré cargo de ser la mejor pareja que puedas tener.</p>
-        <a href="your-youtube-video-url" target="_blank"><button>Ver Video</button></a>
+        <button id="video-button" >Ver Video</button>
         <script>
-            fetch('/send-email', { method: 'POST' });
+            // Set video URL dynamically
+            let videoUrl = 'https://www.youtube.com/watch?v=OukQDrJ7QRQ';
+            fetch('/get-video-url')
+                .then(response => response.json())
+                .then(data => {
+                    videoUrl = data.videoUrl;
+                });
+
+            // Send email notification and redirect to video on button click
+            document.getElementById('video-button').addEventListener('click', function() {
+                fetch('/send-email', { method: 'POST' })
+                    .then(() => {
+                        window.location.href = videoUrl;
+                    })
+                    .catch(err => console.error('Error sending email:', err));
+            });
         </script>
     </div>
 </body>
