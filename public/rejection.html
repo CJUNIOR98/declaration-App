@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rechazo</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="rejection">
+        <img src="your-gif-url.gif" alt="Rechazo">
+        <h1>Me gustas lo suficiente</h1>
+        <p>Como para que me dejes demostrarte que me gustas.</p>
+        <form action="/rejection" method="POST">
+            <button type="submit" name="answer" value="yes">Sí</button>
+            <button type="submit" name="answer" value="no" onmouseover="moveButton(this)">No</button>
+        </form>
+        <script>
+            function moveButton(button) {
+                const rect = button.getBoundingClientRect();
+                const x = Math.random() * (window.innerWidth - rect.width);
+                const y = Math.random() * (window.innerHeight - rect.height);
+                button.style.position = 'absolute';
+                button.style.left = `${x}px`;
+                button.style.top = `${y}px`;
+            }
+        </script>
+    </div>
+</body>
+</html>
