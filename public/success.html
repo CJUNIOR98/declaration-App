@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,21 +11,21 @@
         <img src="your-gif-url.gif" alt="Éxito">
         <h1>Muchas gracias</h1>
         <p>Por darme la oportunidad. Me haré cargo de ser la mejor pareja que puedas tener.</p>
-        <button id="video-button" >Ver Video</button>
+        <button id="video-button">Ver Video</button>
         <script>
             // Set video URL dynamically
-            let videoUrl = 'https://www.youtube.com/watch?v=OukQDrJ7QRQ';
+            let videoUrl = 'https://www.youtube.com/watch?v=OukQDrJ7QRQ&ab_channel=MoratVEVO';
             fetch('/get-video-url')
                 .then(response => response.json())
                 .then(data => {
                     videoUrl = data.videoUrl;
                 });
 
-            // Send email notification and redirect to video on button click
+            // Send email notification and open video in new tab on button click
             document.getElementById('video-button').addEventListener('click', function() {
                 fetch('/send-email', { method: 'POST' })
                     .then(() => {
-                        window.location.href = videoUrl;
+                        window.open(videoUrl, '_blank'); // Open video in a new tab
                     })
                     .catch(err => console.error('Error sending email:', err));
             });

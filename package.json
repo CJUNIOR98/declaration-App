@@ -13,9 +13,12 @@
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "googleapis": "^140.0.1",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.10.3",
-    "nodemailer": "^6.9.14"
+    "nodemailer": "^6.9.14",
+    "resend": "^3.5.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.4"

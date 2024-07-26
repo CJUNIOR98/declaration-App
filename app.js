@@ -1,6 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const session = require('express-session');
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -11,6 +12,14 @@ app.use(express.static('public'));
 
 const db = require('./config/db');
 const sendEmail = require('./config/email'); // Importar la función de envío de correo
+
+// Configuración de la sesión
+app.use(session({
+  secret: 'your_secret_key',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false } // Use secure: true in production with HTTPS
+}));
 
 // Register user
 app.post('/register', (req, res) => {
@@ -35,6 +44,7 @@ app.post('/login', (req, res) => {
       if (err) throw err;
       if (!match) return res.status(401).send('Invalid credentials');
       const token = jwt.sign({ id: user.id }, 'secret_key', { expiresIn: '1h' });
+      req.session.user = { id: user.id, email: user.email }; // Almacenar el usuario en la sesión
       res.cookie('token', token);
       res.redirect('/proposal.html');
     });
@@ -62,7 +72,8 @@ app.post('/rejection', (req, res) => {
 });
 
 app.post('/success', (req, res) => {
-  sendEmail('Thank You!', 'Thanks for giving me a chance.', 'user@example.com');
+  const userEmail = req.session.user.email; // Obtener el correo electrónico del usuario de la sesión
+  sendEmail('Thank You!', 'Thanks for giving me a chance.', userEmail);
   res.redirect(process.env.YOUTUBE_VIDEO_URL);
 });
 
@@ -73,7 +84,8 @@ app.get('/get-video-url', (req, res) => {
 
 // Endpoint to send email
 app.post('/send-email', (req, res) => {
-  sendEmail('Thank You!', 'Thanks for giving me a chance.', 'user@example.com');
+  const userEmail = req.session.user.email; // Obtener el correo electrónico del usuario de la sesión
+  sendEmail('Thank You!', 'Thanks for giving me a chance.', userEmail);
   res.sendStatus(200);
 });
 
